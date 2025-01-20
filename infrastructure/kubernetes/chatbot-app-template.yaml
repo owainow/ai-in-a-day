@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot-react-app
+  labels:
+    app: chatbot-react-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatbot-react-app
+  template:
+    metadata:
+      labels:
+        app: chatbot-react-app
+    spec:
+      containers:
+      - name: chatbot-react-app
+        image: ${ACR_LOGIN_SERVER}/chatbot-react-app:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_LLM_ENDPOINT
+          value: ${LLM_ENDPOINT}
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+          requests:
+            memory: "512Mi"
+            cpu: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatbot-react-app
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 3000
+  selector:
+    app: chatbot-react-app

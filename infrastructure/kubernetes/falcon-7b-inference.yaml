@@ -1,0 +1,19 @@
+apiVersion: kaito.sh/v1alpha1
+kind: Workspace
+metadata:
+  name: workspace-falcon-7b-inference-adapter
+resource:
+  instanceType: Standard_NC12s_v3
+  labelSelector:
+    matchLabels:
+      apps: falcon-7b-adapter
+inference:
+  preset:
+    name: falcon-7b-instruct
+  adapters:
+    - source:
+        name: falcon-7b-adapter
+        image: llmrepooow.azurecr.io/adapters/myadapter:0.0.1
+        imagePullSecrets: 
+          - acr-secret
+      strength: "1.0"
